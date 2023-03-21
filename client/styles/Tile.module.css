@@ -1,0 +1,71 @@
+.container {
+  padding: 0 2rem;
+  border: 1px solid white;
+  width: 100%;
+  display: inline-grid;
+  grid-template-columns: 1fr 3fr;
+  min-height: 600px;
+}
+
+.box {
+  min-height: 300px;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.files {
+  border-right: 1px solid white;
+  display: flex;
+  flex-direction: column;
+}
+
+.files p {
+  border-bottom: 1px solid white;
+}
+
+.files p:hover {
+  background-color: #1b1b1b;
+  cursor: pointer;
+}
+
+.main {
+  min-height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 4rem;
+}
+
+.logo {
+  height: 1em;
+  margin-left: 0.5rem;
+}
+
+.description {
+  line-height: 1.5;
+  font-size: 1.5rem;
+  margin: 1rem;
+}
+
+.header {
+  height: 4rem;
+  width: 100%;
+}
+
+.icon {
+  margin: 10px;
+  height: 30px;
+}
+
+.icon:hover {
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+}
