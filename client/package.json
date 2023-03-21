@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
@@ -20,6 +21,13 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "eslint": "8.36.0"
+    "eslint": "8.36.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
+    "prettier": "2.8.5"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
   }
 }
