@@ -1,9 +1,10 @@
 export default function handler(req, res) {
     return res.status(200).json({
         name: 'Big Fish',
-        description: 'To complete the big fish tile you must catch a big bass, big swordfish, and big shark.',
+        description:
+            'To complete the big fish tile you must catch a big bass, big swordfish, and big shark.',
         pointsEarned: 0,
-        pointsPossible: 100, 
+        pointsPossible: 100,
         files: [
             {
                 id: 0,
