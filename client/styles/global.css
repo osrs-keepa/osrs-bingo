@@ -3,7 +3,7 @@
   --background-start-rgb: 87, 87, 87;
   --background-end-rgb: 20, 20, 20;
 
-  --green: rgba(137, 207, 138, .8);
+  --green: rgba(137, 207, 138, 0.8);
 
   --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
   --secondary-glow: linear-gradient(
