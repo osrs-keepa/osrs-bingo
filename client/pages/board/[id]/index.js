@@ -6,7 +6,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import BoardContext from '../../BoardContext';
+import BoardContext from '../../../components/_boardContext';
 
 export default function Board() {
     const [board, setBoard] = useState(null);
@@ -16,6 +16,7 @@ export default function Board() {
     const { state, setState } = useContext(BoardContext);
 
     useEffect(() => {
+        console.log(state);
         if(state.board && JSON.stringify(state.board) !== '{}')
         {
             setBoard(state.board);
