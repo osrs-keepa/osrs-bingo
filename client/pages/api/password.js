@@ -1,7 +1,13 @@
-export default function handler(req, res) {
-    if(req.body.message.password != "password")
+export default async function handler(req, res) {
+    console.log(req.query);
+    var response = await fetch(`${process.env.API_URL}/keys/${req.query.password}`);
+    console.log(response);
+    try {
+        var user = await response.json();
+        return res.status(200).json(user);
+    } catch(err)
     {
-        res.status(401).json({ error: 'unauthorized' });
+        return res.status(401).json({message: "Unauthorized"});
     }
-    res.status(200).json({ message: req.body });
-}  
+    
+}
