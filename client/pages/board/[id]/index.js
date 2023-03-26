@@ -1,32 +1,42 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styles from '../../../styles/Board.module.css';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWrench, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { motion, m } from 'framer-motion';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import BoardContext from '../../BoardContext';
 
 export default function Board() {
     const [board, setBoard] = useState(null);
     const [isLoading, setLoading] = useState(false);
     const router = useRouter();
     const { id } = router.query;
+    const { state, setState } = useContext(BoardContext);
 
     useEffect(() => {
+        if(state.board && JSON.stringify(state.board) !== '{}')
+        {
+            setBoard(state.board);
+            return;
+        }
         setLoading(true);
-        fetch('/api/board')
+        fetch(`/api/board/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setBoard(data);
+                console.log(state, data);
+                setState({ token: state.token, board: data, lastFetch: Date.now() })
+                console.log(state);
                 setLoading(false);
             });
     }, []);
 
     function getTileBackground(pct) {
         // where pct is completion %
-        return `linear-gradient(#000, #000 ${(1 - pct) * 100}%, #FFF ${
-            (1 - pct) * 100
-        }% )`;
+        // TODO: make a progress bar on the side of the tile
+        return `linear-gradient(#000 ${(1 - pct) * 100}%, #fff)`;
     }
 
     if (isLoading)
@@ -48,7 +58,7 @@ export default function Board() {
                 {board.tiles.map((tile) => (
                     <Link
                         key={tile.id}
-                        href={`/board/${encodeURIComponent(id)}/${tile.id}`}
+                        href={`/board/${encodeURIComponent(id)}/${encodeURIComponent(tile.id)}`}
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.25 }}
@@ -57,17 +67,40 @@ export default function Board() {
                             className={styles.box}
                             layoutId={tile.id}
                             style={{
-                                background: getTileBackground(tile.completion)
+                                backgroundColor: "black"
                             }}
                         >
-                            <FontAwesomeIcon
-                                className={styles.icon}
-                                icon={faWrench}
-                            />
+                            <div className={styles.tile}>
+                                <p className={styles.tileTitle}>{tile.name}</p>
+                                {/* TODO: add custom icons with good sizing */}
+                                <Image
+                                    src={`/${tile.icon}.png`}
+                                    width="60"
+                                    height="80"
+                                    alt=""
+                                    className={styles.icon}
+                                />
+                                {/* <FontAwesomeIcon
+                                    className={styles.icon}
+                                    icon={faWrench}
+                                /> */}
+                            </div>
+                            
                         </motion.div>
                     </Link>
                 ))}
             </div>
         </main>
     );
+}
+
+export async function getServerSideProps(context) {
+    // res.setHeader(
+    //     'Cache-Control',
+    //     'public, s-maxage=10, stale-while-revalidate=59'
+    // )
+
+    return {
+        props: {},
+    };
 }
