@@ -5,7 +5,7 @@ import styles from '../../../styles/Tile.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faSpinner, faCloudArrowUp } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
-import BoardContext from '../../BoardContext';
+import BoardContext from '../../../components/_boardContext';
 
 export default function Tile() {
     const [tile, setTile] = useState(null);
@@ -32,6 +32,7 @@ export default function Tile() {
     }
 
     useEffect(() => {
+        console.log(state);
         if(state.board && JSON.stringify(state.board) !== '{}') {
             setTile(state.board.tiles.find(t => t.id == tileId));
         } else {
@@ -87,7 +88,7 @@ export default function Tile() {
                             {`${file.Key.split('/')[2]} ${file.LastModified}`}
                         </p>
                     )) : (<p>No files uploaded yet</p>)}
-                    <label for="file-upload" className={styles.fileInput}>
+                    <label className={styles.fileInput}>
                         <span>{selectedFile ? selectedFile.name : "Upload Files"}</span>
                         <FontAwesomeIcon className={styles.uploadIcon} icon={faCloudArrowUp} />
                     </label>
@@ -97,7 +98,7 @@ export default function Tile() {
                 <div className={styles.box}>
                     {file ? (
                         <Image
-                            src={`https://rsbingo-files.s3.us-east-2.amazonaws.com/${file.Key}`}
+                            src={`${process.env.S3_BUCKET_URL}/${file.Key}`}
                             width={1000}
                             height={800}
                             alt=""

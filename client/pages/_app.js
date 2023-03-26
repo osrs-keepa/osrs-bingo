@@ -1,6 +1,6 @@
 import '../styles/global.css';
 import { useState } from "react";
-import BoardContext from './BoardContext';
+import BoardContext from '../components/_boardContext';
 
 const AppProvider = ({ children }) => {
     const initialState = {

@@ -8,11 +8,7 @@ export default async function handler(req, res) {
         headers: { "Authorization": process.env.ADMIN_KEY },
         body: JSON.stringify(b)
     };
-    console.log(b);
     var response = await fetch(`${process.env.API_URL}/files`, requestObject);
-    console.log('response', response);
     var storageLink = await response.json();
-    console.log('storageLink', storageLink);
-
     return res.status(200).json(storageLink.Item);
 }

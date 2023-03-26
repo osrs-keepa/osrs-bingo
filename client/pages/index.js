@@ -1,6 +1,6 @@
 import styles from '../styles/Home.module.css';
 import { useState, useContext, useEffect } from 'react';
-import BoardContext from './BoardContext';
+import BoardContext from '../components/_boardContext';
 import { useRouter } from 'next/router'
 
 
