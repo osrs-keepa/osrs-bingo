@@ -19,6 +19,7 @@
     border-right: 1px solid white;
     display: flex;
     flex-direction: column;
+    align-items: space-between;
 }
 
 .files p {
@@ -26,6 +27,19 @@
 }
 
 .files p:hover {
+    background-color: #1b1b1b;
+    cursor: pointer;
+}
+
+.fileInput {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.fileInput:hover {
     background-color: #1b1b1b;
     cursor: pointer;
 }
@@ -60,6 +74,7 @@
     width: 100%;
 }
 
+.uploadIcon,
 .icon {
     margin: 10px;
     height: 30px;

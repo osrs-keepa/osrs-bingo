@@ -26,9 +26,7 @@ export default function Board() {
             .then((res) => res.json())
             .then((data) => {
                 setBoard(data);
-                console.log(state, data);
                 setState({ token: state.token, board: data, lastFetch: Date.now() })
-                console.log(state);
                 setLoading(false);
             });
     }, []);
@@ -80,10 +78,6 @@ export default function Board() {
                                     alt=""
                                     className={styles.icon}
                                 />
-                                {/* <FontAwesomeIcon
-                                    className={styles.icon}
-                                    icon={faWrench}
-                                /> */}
                             </div>
                             
                         </motion.div>
