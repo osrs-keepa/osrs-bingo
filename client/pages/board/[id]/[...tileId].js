@@ -46,6 +46,19 @@ export default function Tile() {
     }
 
     useEffect(() => {
+        if(!state.token) {
+            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key)
+            {
+                const newState = {
+                    token: JSON.parse(localStorage.getItem('auth')).key,
+                    board: state.board,
+                    lastFetch: state.fetch
+                }
+                setState(newState);
+            } else {
+                router.push('/');
+            }
+        }
         if(state.board && JSON.stringify(state.board) !== '{}') {
             setTile(state.board.tiles.find(t => t.id == tileId));
         } else {

@@ -28,7 +28,6 @@ export default function Board() {
             } else {
                 router.push('/');
             }
-            
         }
         if(state.board && JSON.stringify(state.board) !== '{}')
         {
