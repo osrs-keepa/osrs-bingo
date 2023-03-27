@@ -105,7 +105,7 @@ export default function Tile() {
             <div className={styles.container}>
                 {!tile.xpTile && <div className={styles.files}>
                     {files && <FileList files={files} setFile={setFile} />}
-                    <label className={styles.fileInput}>
+                    <label for="file-upload" className={styles.fileInput}>
                         <span>{selectedFile ? selectedFile.name : "Upload Files"}</span>
                         <FontAwesomeIcon className={styles.uploadIcon} icon={faCloudArrowUp} />
                     </label>
