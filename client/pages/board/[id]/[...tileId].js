@@ -7,6 +7,20 @@ import { faArrowLeft, faSpinner, faCloudArrowUp } from '@fortawesome/free-solid-
 import { useRouter } from 'next/router';
 import BoardContext from '../../../components/_boardContext';
 
+function FileList({ files, setFile }) {
+    return (files ? files.map((file) => (
+        <p key={file.Key} onClick={() => setFile(file)}>
+            {`${file.Key.split('/')[2]} ${file.LastModified}`}
+        </p>
+    )) : (<p>No files uploaded yet</p>))
+}
+
+function XpTracker() {
+    return (
+        <div className={styles.xpTracker}>xp tracker goes here</div>
+    )
+}
+
 export default function Tile() {
     const [tile, setTile] = useState(null);
     const [file, setFile] = useState(null);
@@ -23,7 +37,7 @@ export default function Tile() {
         if(!file || !id || !tileId) return;
         try {
             const name = `${id}/${tileId}/${file.name}`;
-            const storageLinkResponse = await fetch(`/api/files/upload?fileType=${file.type}&fileName=${name}`);
+            const storageLinkResponse = await fetch(`/api/files/upload?fileType=${file.type}&fileName=${name}`, {headers: { Authorization: state.token }});
             const storageLink = await storageLinkResponse.json();
             await fetch(storageLink , { method:'PUT', body :file});
         } catch(err) {
@@ -32,21 +46,25 @@ export default function Tile() {
     }
 
     useEffect(() => {
-        console.log(state);
         if(state.board && JSON.stringify(state.board) !== '{}') {
             setTile(state.board.tiles.find(t => t.id == tileId));
         } else {
             setLoading(true);
-            fetch(`/api/board/${id}`)
+            fetch(`/api/board/${id}`, {headers: { Authorization: state.token }})
                 .then((res) => res.json())
                 .then((data) => {
-                    setState({token: state.token, board: data, lastFetch: Date.now()});
+                    const newState = {
+                        token: state.token,
+                        board: data,
+                        lastFetch: Date.now()
+                    };
+                    setState(newState);
                     setTile(data.tiles.find(t => t.id == tileId));
                     setLoading(false);
                 });
         }
         
-        fetch(`/api/files?boardId=${id}&tileId=${tileId}`)
+        fetch(`/api/files?boardId=${id}&tileId=${tileId}`, {headers: { Authorization: state.token }})
             .then((res) => res.json())
             .then((data) => {
                 console.log(data);
@@ -81,33 +99,31 @@ export default function Tile() {
             </div>
             <h1 className={styles.title}>{tile.name}</h1>
             <p className={styles.description}>{tile.description}</p>
+            { tile.xpTile ? <XpTracker /> : 
+            // if its an xp tile use XpTracker component
+            // else use the file uploader/viewer
             <div className={styles.container}>
-                <div className={styles.files}>
-                    { files ? files.map((file) => (
-                        <p key={file.Key} onClick={() => setFile(file)}>
-                            {`${file.Key.split('/')[2]} ${file.LastModified}`}
-                        </p>
-                    )) : (<p>No files uploaded yet</p>)}
+                {!tile.xpTile && <div className={styles.files}>
+                    {files && <FileList files={files} setFile={setFile} />}
                     <label className={styles.fileInput}>
                         <span>{selectedFile ? selectedFile.name : "Upload Files"}</span>
                         <FontAwesomeIcon className={styles.uploadIcon} icon={faCloudArrowUp} />
                     </label>
                     <input id="file-upload" type="file" accept="image/png, image/jpg, image/gif, image/jpeg" onChange={handleFileInput}/>
                     <button disabled={!selectedFile} onClick={() => uploadFile(selectedFile)}>Submit</button>
-                </div>
+                </div>}
                 <div className={styles.box}>
-                    {file ? (
+                    {file &&
                         <Image
                             src={`${process.env.S3_BUCKET_URL}/${file.Key}`}
                             width={1000}
                             height={800}
                             alt=""
                         />
-                    ) : (
-                        <p>Upload a file</p>
-                    )}
+                    }
                 </div>
             </div>
+            }
         </main>
     );
 }

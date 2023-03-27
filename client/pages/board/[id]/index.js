@@ -16,18 +16,36 @@ export default function Board() {
     const { state, setState } = useContext(BoardContext);
 
     useEffect(() => {
-        console.log(state);
+        if(!state.token) {
+            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key)
+            {
+                const newState = {
+                    token: JSON.parse(localStorage.getItem('auth')).key,
+                    board: state.board,
+                    lastFetch: state.fetch
+                }
+                setState(newState);
+            } else {
+                router.push('/');
+            }
+            
+        }
         if(state.board && JSON.stringify(state.board) !== '{}')
         {
             setBoard(state.board);
             return;
         }
         setLoading(true);
-        fetch(`/api/board/${id}`)
+        fetch(`/api/board/${id}`, {headers: { Authorization: state.token }})
             .then((res) => res.json())
             .then((data) => {
                 setBoard(data);
-                setState({ token: state.token, board: data, lastFetch: Date.now() })
+                const newState = {
+                    token: state.token,
+                    board: data.board,
+                    lastFetch: Date.now()
+                };
+                setState(newState);
                 setLoading(false);
             });
     }, []);
@@ -54,7 +72,7 @@ export default function Board() {
         <main className={styles.main}>
             <h1 className={styles.title}>{board.name}</h1>
             <div className={styles[`board${board.size}`]}>
-                {board.tiles.map((tile) => (
+                {board.tiles && board.tiles.map((tile) => (
                     <Link
                         key={tile.id}
                         href={`/board/${encodeURIComponent(id)}/${encodeURIComponent(tile.id)}`}
@@ -79,6 +97,7 @@ export default function Board() {
                                     alt=""
                                     className={styles.icon}
                                 />
+                                <p className={styles.tileFooter}>{tile.possiblePoints}</p>
                             </div>
                             
                         </motion.div>

@@ -1,11 +1,12 @@
 export default async function handler(req, res) {
+    console.log('token', req.headers.Authorization);
     var b = {
         fileName: req.query.fileName,
         fileType: req.query.fileType
     };
     const requestObject = {
         method:'POST' ,
-        headers: { "Authorization": process.env.ADMIN_KEY },
+        headers: { "Authorization": req.headers.Authorization },
         body: JSON.stringify(b)
     };
     var response = await fetch(`${process.env.API_URL}/files`, requestObject);
