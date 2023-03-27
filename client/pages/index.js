@@ -14,7 +14,12 @@ export default function Home() {
         if(state.token == '' && localStorage.getItem('auth'))
         {
             const auth = JSON.parse(localStorage.getItem('auth'));
-            setState({token: auth.key, ...state});
+            const newState = {
+                token: auth.key,
+                board: state.board,
+                lastFetch: state.lastFetch
+            }
+            setState(newState);
             router.push(`/board/${auth.boardId}`)
             return;
         }
@@ -29,8 +34,12 @@ export default function Home() {
             setErrorMessage(b.message);
             return;
         }
-        console.log(b);
-        setState({token: b.key, ...state})
+        const newState = {
+            token: b.key,
+            board: state.board,
+            lastFetch: state.lastFetch
+        };
+        setState(newState);
         localStorage.setItem('auth', JSON.stringify(b));
         router.push(`/board/${b.boardId}`)
     }
