@@ -34,7 +34,7 @@ export default function Tile() {
     const handleFileInput = (e) => setSelectedFile(e.target.files[0]);
 
     async function uploadFile(file) {
-        if(!file || !id || !tileId) return;
+        if(!file || !id || !tileId || file.size > 999999) return;
         try {
             const name = `${id}/${tileId}/${file.name}`;
             const storageLinkResponse = await fetch(`/api/files/upload?fileType=${file.type}&fileName=${name}`, {headers: { Authorization: state.token }});
@@ -47,16 +47,17 @@ export default function Tile() {
 
     useEffect(() => {
         if(!state.token) {
-            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key)
-            {
+            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key) {
                 const newState = {
                     token: JSON.parse(localStorage.getItem('auth')).key,
                     board: state.board,
                     lastFetch: state.fetch
                 }
                 setState(newState);
+                return;
             } else {
                 router.push('/');
+                return;
             }
         }
         if(state.board && JSON.stringify(state.board) !== '{}') {
@@ -76,17 +77,17 @@ export default function Tile() {
                     setLoading(false);
                 });
         }
-        
-        fetch(`/api/files?boardId=${id}&tileId=${tileId}`, {headers: { Authorization: state.token }})
+        if(state.token && (!files || JSON.stringify(files) === '{}')) {
+            fetch(`/api/files?boardId=${id}&tileId=${tileId}`, {headers: { Authorization: state.token }})
             .then((res) => res.json())
             .then((data) => {
-                console.log(data);
                 setFiles(data);
             })
             .catch(err => {
                 console.log('err', err);
             })
-    }, []);
+        }
+    }, [state.token]);
 
     if (isLoading)
         return (

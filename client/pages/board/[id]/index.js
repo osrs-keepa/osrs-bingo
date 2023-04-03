@@ -17,37 +17,38 @@ export default function Board() {
 
     useEffect(() => {
         if(!state.token) {
-            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key)
-            {
+            if(JSON.parse(localStorage.getItem('auth')) && JSON.parse(localStorage.getItem('auth')).key) {
                 const newState = {
                     token: JSON.parse(localStorage.getItem('auth')).key,
                     board: state.board,
                     lastFetch: state.fetch
                 }
                 setState(newState);
+                return;
             } else {
                 router.push('/');
+                return;
             }
         }
         if(state.board && JSON.stringify(state.board) !== '{}')
         {
             setBoard(state.board);
-            return;
+        } else {
+            setLoading(true);
+            fetch(`/api/board/${id}`, {headers: { Authorization: state.token }})
+                .then((res) => res.json())
+                .then((data) => {
+                    setBoard(data);
+                    const newState = {
+                        token: state.token,
+                        board: data.board,
+                        lastFetch: Date.now()
+                    };
+                    setState(newState);
+                    setLoading(false);
+                });
         }
-        setLoading(true);
-        fetch(`/api/board/${id}`, {headers: { Authorization: state.token }})
-            .then((res) => res.json())
-            .then((data) => {
-                setBoard(data);
-                const newState = {
-                    token: state.token,
-                    board: data.board,
-                    lastFetch: Date.now()
-                };
-                setState(newState);
-                setLoading(false);
-            });
-    }, []);
+    }, [state.token]);
 
     function getTileBackground(pct) {
         // where pct is completion %
