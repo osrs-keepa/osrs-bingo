@@ -1,3 +1,4 @@
+// Get Board by id
 export default async function handler(req, res) {
     const { bid } = req.query;
     const url = `${process.env.API_URL}/boards/${bid}`;

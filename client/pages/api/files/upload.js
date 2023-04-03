@@ -1,3 +1,4 @@
+// Get the upload url
 export default async function handler(req, res) {
     console.log('token', req.headers.Authorization);
     var b = {
