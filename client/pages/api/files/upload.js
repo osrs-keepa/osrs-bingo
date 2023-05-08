@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     };
     const requestObject = {
         method:'POST' ,
-        headers: { "Authorization": req.headers.Authorization },
+        headers: { "Authorization": req.headers.authorization },
         body: JSON.stringify(b)
     };
     var response = await fetch(`${process.env.API_URL}/files`, requestObject);
