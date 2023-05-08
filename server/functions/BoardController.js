@@ -14,6 +14,7 @@ const tableName = "boards";
 const SAMPLE_BOARD = {
     id: "e6e2ef15-6411-43af-88ea-ff08258e1e1f",
     name: "Gatekeepr Bingo 2023",
+    totalPoints: 0,
     size: 3,
     tiles: [
       {
